@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Student Score Management System</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f1f5f9;
+            margin: 0;
+            padding: 30px 15px;
+            color: #1e293b;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 14px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1d4ed8;
+            font-size: 27px;
+        }
+
+        .intro {
+            text-align: center;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .student {
+            margin: 18px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            font-size: 16px;
+        }
+
+        input:focus {
+            outline: 2px solid #93c5fd;
+            border-color: #2563eb;
+        }
+
+        button {
+            width: 100%;
+            padding: 13px;
+            margin-top: 12px;
+            border: none;
+            border-radius: 7px;
+            background: #2563eb;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .secondary {
+            background: #475569;
+        }
+
+        .secondary:hover {
+            background: #334155;
+        }
+
+        #results {
+            display: none;
+            margin-top: 25px;
+            padding: 20px;
+            background: #eff6ff;
+            border-radius: 10px;
+        }
+
+        #results h2 {
+            color: #1d4ed8;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            padding: 10px 0;
+            border-bottom: 1px solid #dbeafe;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 25px;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <h1>Student Score Management System</h1>
+
+        <p class="intro">
+            An application demonstrating the use of arrays
+            to store and analyze students' examination scores.
+        </p>
+
+        <form id="scoreForm">
+
+            <div class="student">
+                <label for="score1">Student 1 Score (0–100)</label>
+                <input type="number" id="score1"
+                       min="0" max="100" step="any" required>
+            </div>
+
+            <div class="student">
+                <label for="score2">Student 2 Score (0–100)</label>
+                <input type="number" id="score2"
+                       min="0" max="100" step="any" required>
+            </div>
+
+            <div class="student">
+                <label for="score3">Student 3 Score (0–100)</label>
+                <input type="number" id="score3"
+                       min="0" max="100" step="any" required>
+            </div>
+
+            <div class="student">
+                <label for="score4">Student 4 Score (0–100)</label>
+                <input type="number" id="score4"
+                       min="0" max="100" step="any" required>
+            </div>
+
+            <div class="student">
+                <label for="score5">Student 5 Score (0–100)</label>
+                <input type="number" id="score5"
+                       min="0" max="100" step="any" required>
+            </div>
+
+            <button type="submit">Calculate Results</button>
+
+            <button type="reset" class="secondary">
+                Clear Scores
+            </button>
+
+        </form>
+
+        <section id="results" aria-live="polite">
+
+            <h2>Student Score Report</h2>
+
+            <div id="studentResults"></div>
+
+            <div class="result-row">
+                <strong>Total Score</strong>
+                <span id="total"></span>
+            </div>
+
+            <div class="result-row">
+                <strong>Average Score</strong>
+                <span id="average"></span>
+            </div>
+
+            <div class="result-row">
+                <strong>Highest Score</strong>
+                <span id="highest"></span>
+            </div>
+
+            <div class="result-row">
+                <strong>Lowest Score</strong>
+                <span id="lowest"></span>
+            </div>
+
+        </section>
+
+        <footer>
+            Developed as an educational project on arrays.
+        </footer>
+
+    </div>
+
+    <script>
+        const form = document.getElementById("scoreForm");
+
+        form.addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const scores = [];
+
+            for (let i = 1; i <= 5; i++) {
+                const input = document.getElementById("score" + i);
+                const score = input.valueAsNumber;
+
+                if (
+                    input.value.trim() === "" ||
+                    !Number.isFinite(score) ||
+                    score < 0 ||
+                    score > 100
+                ) {
+                    alert("Please enter a valid score from 0 to 100 for every student.");
+                    input.focus();
+                    return;
+                }
+
+                scores.push(score);
+            }
+
+            const total = scores.reduce(
+                (sum, score) => sum + score, 0
+            );
+
+            const average = total / scores.length;
+            const highest = Math.max(...scores);
+            const lowest = Math.min(...scores);
+
+            document.getElementById("studentResults").innerHTML =
+                scores.map((score, index) =>
+                    `<div class="result-row">
+                        <span>Student ${index + 1}</span>
+                        <span>${score}</span>
+                    </div>`
+                ).join("");
+
+            document.getElementById("total").textContent =
+                total.toFixed(2);
+
+            document.getElementById("average").textContent =
+                average.toFixed(2);
+
+            document.getElementById("highest").textContent =
+                highest;
+
+            document.getElementById("lowest").textContent =
+                lowest;
+
+            document.getElementById("results").style.display = "block";
+        });
+
+        form.addEventListener("reset", function() {
+            document.getElementById("results").style.display = "none";
+        });
+    </script>
+
+</body>
+</html>
